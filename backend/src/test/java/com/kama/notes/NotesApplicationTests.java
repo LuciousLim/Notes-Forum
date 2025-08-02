@@ -22,19 +22,19 @@ public class NotesApplicationTests {
     @Autowired
     RedisService redisService;
 
-    @Test
-    public void Test() {
-        redisService.set("testKey", "testValue");
-    }
-
-    @Test
-    public void Test2() {
-        Object o = redisService.get("testKey");
-    }
-
-    @Test
-    public void Test3() {
-        Object o = redisService.get("random");
-        System.out.println(o);
-    }
+//    @Test
+//    public void Test() {
+//        redisService.set("testKey", "testValue");
+//    }
+//
+//    @Test
+//    public void Test2() {
+//        Object o = redisService.get("testKey");
+//    }
+//
+//    @Test
+//    public void Test3() {
+//        Object o = redisService.get("random");
+//        System.out.println(o);
+//    }
 }

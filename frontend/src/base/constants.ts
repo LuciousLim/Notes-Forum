@@ -4,6 +4,6 @@ export const kamanoteUserToken = TOKEN_KEY
 
 // API Host
 export const kamanoteHost =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081'
 
 // 其他常量...

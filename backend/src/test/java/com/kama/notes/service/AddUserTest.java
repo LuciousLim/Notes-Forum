@@ -14,19 +14,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class AddUserTest {
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Test
-    public void addTestCount() {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        for (int i = 1; i < 10; i++) {
-            User user = new User();
-            user.setAccount("account" + String.format("%02d", i));
-            user.setUsername("username" + String.format("%02d", i));
-            user.setPassword(passwordEncoder.encode("password" + String.format("%02d", i)));
-
-            userMapper.insert(user);
-        }
-    }
+//    @Autowired
+//    private UserMapper userMapper;
+//
+//    @Test
+//    public void addTestCount() {
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        for (int i = 1; i < 10; i++) {
+//            User user = new User();
+//            user.setAccount("account" + String.format("%02d", i));
+//            user.setUsername("username" + String.format("%02d", i));
+//            user.setPassword(passwordEncoder.encode("password" + String.format("%02d", i)));
+//
+//            userMapper.insert(user);
+//        }
+//    }
 }

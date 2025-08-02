@@ -20,4 +20,4 @@ COPY --from=build /app/target/*.jar app.jar
 # 设置启动命令并暴露端口
 CMD ["java", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
 
-EXPOSE 8080
+EXPOSE 8081

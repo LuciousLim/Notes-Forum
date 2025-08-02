@@ -19,11 +19,21 @@ spring:
         max-idle: 8
         min-idle: 0
         max-wait: 2000
+  kafka:
+    bootstrap-servers: ${kafka.bootstrap-servers}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: email-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   mail:
     host: smtp.qq.com
     port: 465
-    username: your@qq.com
-    password: password
+    username: 630970757@qq.com
+    password: yjpggruvaxcfbdjc
     properties:
       mail:
         smtp:
@@ -35,6 +45,12 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
     protocol: smtps
     default-encoding: UTF-8
+
+kafka:
+  bootstrap-servers: localhost:9092
+  topic:
+    email-task: email-task-topic
+
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -49,7 +65,7 @@ jwt:
   expiration: 2592000
 
 server:
-  port: 8080
+  port: 8081
 
 # 自定义邮件配置
 mail:
@@ -57,3 +73,4 @@ mail:
     expire-minutes: 15  # 验证码过期时间 15 min
     limit-expire-seconds: 60  # 发送过一次验证码后，在 60s 内不能再发送验证码，用于限流
     template-path: "templates/mail/verify-code.html"
+  provider: kafka
