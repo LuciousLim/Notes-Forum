@@ -23,9 +23,7 @@ public class RedisKey {
      * @param email 用户邮箱地址
      * @return 格式为 "email:register_verification_code:limit:{email}" 的 Redis 键名
      */
-    public static String registerVerificationLimitCode(String email) {
-        return "email:register_verification_code:limit:" + email;
-    }
+    public static String registerVerificationLimitCode(String email) { return "email:register_verification_code:limit:" + email; }
 
     /**
      * 生成邮件任务队列的 Redis 键名
@@ -35,4 +33,11 @@ public class RedisKey {
     public static String emailTaskQueue() {
         return "queue:email:task";
     }
+
+    /**
+     * 生成邮件任务队列的 Redis 键名
+     *
+     * @return 格式为 "queue:email:task" 的 Redis 键名
+     */
+    public static String unreadById(Long userId){ return "unread:" + userId; }
 }

@@ -79,4 +79,4 @@ mail:
     expire-minutes: 15  # 验证码过期时间 15 min
     limit-expire-seconds: 60  # 发送过一次验证码后，在 60s 内不能再发送验证码，用于限流
     template-path: "templates/mail/verify-code.html"
-  provider: redis
+  provider: kafka

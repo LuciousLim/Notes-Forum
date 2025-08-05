@@ -10,11 +10,14 @@ import com.kama.notes.model.entity.Note;
 import com.kama.notes.model.entity.NoteLike;
 import com.kama.notes.model.enums.message.MessageTargetType;
 import com.kama.notes.model.enums.message.MessageType;
+import com.kama.notes.model.enums.redisKey.RedisKey;
 import com.kama.notes.scope.RequestScopeData;
 import com.kama.notes.service.MessageService;
 import com.kama.notes.service.NoteLikeService;
+import com.kama.notes.service.RedisService;
 import com.kama.notes.utils.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

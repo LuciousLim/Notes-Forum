@@ -7,9 +7,11 @@ import com.kama.notes.model.dto.message.MessageDTO;
 import com.kama.notes.model.entity.Message;
 import com.kama.notes.model.entity.User;
 import com.kama.notes.model.enums.message.MessageType;
+import com.kama.notes.model.enums.redisKey.RedisKey;
 import com.kama.notes.model.vo.message.MessageVO;
 import com.kama.notes.scope.RequestScopeData;
 import com.kama.notes.service.MessageService;
+import com.kama.notes.service.RedisService;
 import com.kama.notes.service.UserService;
 import com.kama.notes.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,9 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private RequestScopeData requestScopeData;
 
+    @Autowired
+    private RedisService redisService;
+
     @Override
     public Integer createMessage(MessageDTO messageDTO) {
         try {
@@ -46,6 +51,8 @@ public class MessageServiceImpl implements MessageService {
             if (messageDTO.getContent() == null) {
                 message.setContent("");
             }
+
+            redisService.increment(RedisKey.unreadById(messageDTO.getReceiverId()), 1);
 
             return messageMapper.insert(message);
         } catch (Exception e) {
@@ -63,7 +70,7 @@ public class MessageServiceImpl implements MessageService {
 
         List<Long> senderIds = messages.stream().map(Message::getSenderId).toList();
 
-        // 将 message 专成 messageVO
+        // 将 message 转成 messageVO
         Map<Long, User> userMap = userService.getUserMapByIds(senderIds);
 
         List<MessageVO> messageVOS = messages.stream().map(message -> {
@@ -96,6 +103,7 @@ public class MessageServiceImpl implements MessageService {
     public ApiResponse<EmptyVO> markAsRead(Integer messageId) {
         Long currentUserId = requestScopeData.getUserId();
         messageMapper.markAsRead(messageId, currentUserId);
+        RedisUnreadUpdate(currentUserId, -1);
         return ApiResponse.success();
     }
 
@@ -103,6 +111,7 @@ public class MessageServiceImpl implements MessageService {
     public ApiResponse<EmptyVO> markAsReadBatch(List<Integer> messageIds) {
         Long currentUserId = requestScopeData.getUserId();
         messageMapper.markAsReadBatch(messageIds, currentUserId);
+        RedisUnreadUpdate(currentUserId, -1);
         return ApiResponse.success();
     }
 
@@ -123,7 +132,21 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ApiResponse<Integer> getUnreadCount() {
         Long currentUserId = requestScopeData.getUserId();
-        Integer count = messageMapper.countUnread(currentUserId);
+        Integer count =  RedisUnreadUpdate(currentUserId, 0);
+
         return ApiResponse.success(count);
+    }
+
+    private Integer RedisUnreadUpdate(Long userId, int delta){
+        String key = RedisKey.unreadById(userId);
+        Integer count = (Integer) redisService.get(key);
+        if(count != null){
+            redisService.increment(key, delta);
+        } else {
+            count = messageMapper.countUnread(userId);
+            redisService.set(key, count);
+        }
+
+        return count;
     }
 }
