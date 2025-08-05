@@ -70,6 +70,7 @@ public class NoteLikeServiceImpl implements NoteLikeService {
 
             return ApiResponseUtil.success("点赞成功");
         } catch (Exception e) {
+            e.printStackTrace();
             return ApiResponseUtil.error("点赞失败");
         }
     }
