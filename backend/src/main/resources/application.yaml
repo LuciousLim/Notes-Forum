@@ -24,6 +24,12 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 0                 # 不等确认，最快（可接受数据丢失）
+      retries: 0              # 不重试，低延迟
+      batch-size: 32768       # 每批最大32KB
+      linger-ms: 5            # 最多等待5ms收集消息
+      buffer-memory: 67108864 # 64MB缓存
+      max-block-ms: 2000      # 阻塞超时时间
     consumer:
       group-id: email-consumer-group
       auto-offset-reset: earliest
@@ -73,4 +79,4 @@ mail:
     expire-minutes: 15  # 验证码过期时间 15 min
     limit-expire-seconds: 60  # 发送过一次验证码后，在 60s 内不能再发送验证码，用于限流
     template-path: "templates/mail/verify-code.html"
-  provider: kafka
+  provider: redis

@@ -104,7 +104,7 @@ public class EmailTaskConsumer {
     }
 
     // Kafka消费逻辑
-    @KafkaListener(topics = "email-task-topic", groupId = "email-consumer-group")
+    @KafkaListener(topics = "email-task-topic", groupId = "email-consumer-group", concurrency = "5")
     public void onKafkaMessage(String emailTaskJson) throws JsonProcessingException {
         if ("kafka".equals(provider)) {
             processEmailTask(emailTaskJson);
@@ -117,7 +117,7 @@ public class EmailTaskConsumer {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(from);
         mailMessage.setTo(emailTask.getEmail());
-        mailMessage.setSubject("卡码笔记-验证码");
+        mailMessage.setSubject("验证码");
         mailMessage.setText("您的验证码是：" + emailTask.getCode() + "，有效期5分钟");
         mailSender.send(mailMessage);
 
