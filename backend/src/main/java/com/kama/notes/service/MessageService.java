@@ -16,7 +16,7 @@ public interface MessageService {
     /**
      * 创建消息
      */
-    Integer createMessage(MessageDTO messageDTO);
+    void createMessage(MessageDTO messageDTO);
 
     /**
      * 获取消息列表

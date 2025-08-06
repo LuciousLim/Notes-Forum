@@ -1,5 +1,6 @@
 package com.kama.notes.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kama.notes.mapper.MessageMapper;
 import com.kama.notes.model.base.ApiResponse;
 import com.kama.notes.model.base.EmptyVO;
@@ -17,11 +18,15 @@ import com.kama.notes.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 消息服务实现类
@@ -42,8 +47,19 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Value("${kafka.topic.message-task}")
+    private String messageTaskTopic;
+
+    private final ExecutorService kafkaSendExecutor = Executors.newFixedThreadPool(5);
+
     @Override
-    public Integer createMessage(MessageDTO messageDTO) {
+    public void createMessage(MessageDTO messageDTO) {
         try {
             Message message = new Message();
             BeanUtils.copyProperties(messageDTO, message);
@@ -52,9 +68,20 @@ public class MessageServiceImpl implements MessageService {
                 message.setContent("");
             }
 
+            // 增加收到信息用户的未读消息计数
             redisService.increment(RedisKey.unreadById(messageDTO.getReceiverId()), 1);
 
-            return messageMapper.insert(message);
+            // 异步发送 Kafka 消息
+            kafkaSendExecutor.submit(() -> {
+                try {
+                    String messageTaskJson = objectMapper.writeValueAsString(message);
+                    kafkaTemplate.send(messageTaskTopic, messageTaskJson);
+                } catch (Exception ex) {
+                    log.error("异步发送 Kafka 消息失败", ex);
+                }
+            });
+
+//            return messageMapper.insert(message);
         } catch (Exception e) {
             throw new RuntimeException("创建消息通知失败: " + e.getMessage());
         }

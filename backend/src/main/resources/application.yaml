@@ -56,6 +56,7 @@ kafka:
   bootstrap-servers: localhost:9092
   topic:
     email-task: email-task-topic
+    message-task: message-task-topic
 
 
 mybatis:
