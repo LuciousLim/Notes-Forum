@@ -35,6 +35,8 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  elasticsearch:
+    uris: http://localhost:9200
   mail:
     host: smtp.qq.com
     port: 465
@@ -52,11 +54,17 @@ spring:
     protocol: smtps
     default-encoding: UTF-8
 
+
 kafka:
   bootstrap-servers: localhost:9092
   topic:
     email-task: email-task-topic
     message-task: message-task-topic
+
+search:
+  provider: es
+  sync:
+    enable: false
 
 
 mybatis:

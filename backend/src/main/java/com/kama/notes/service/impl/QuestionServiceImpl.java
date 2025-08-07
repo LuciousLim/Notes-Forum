@@ -13,16 +13,19 @@ import com.kama.notes.model.dto.question.UpdateQuestionBody;
 import com.kama.notes.model.entity.Category;
 import com.kama.notes.model.entity.Note;
 import com.kama.notes.model.entity.Question;
+import com.kama.notes.model.es.QuestionDocument;
 import com.kama.notes.model.vo.question.CreateQuestionVO;
 import com.kama.notes.model.vo.question.QuestionNoteVO;
 import com.kama.notes.model.vo.question.QuestionUserVO;
 import com.kama.notes.model.vo.question.QuestionVO;
 import com.kama.notes.scope.RequestScopeData;
+import com.kama.notes.service.QuestionEsRepository;
 import com.kama.notes.service.QuestionService;
 import com.kama.notes.utils.ApiResponseUtil;
 import com.kama.notes.utils.PaginationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -47,10 +50,18 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private NoteMapper noteMapper;
 
+    @Autowired
+    private QuestionEsRepository questionEsRepository;
+
+    @Value("${search.provider}")
+    private String provider;
+
     @Override
     public Question findById(Integer questionId) {
         return questionMapper.findById(questionId);
     }
+
+
 
     @Override
     public Map<Integer, Question> getQuestionMapByIds(List<Integer> questionIds) {
@@ -201,10 +212,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public ApiResponse<List<QuestionVO>> searchQuestions(SearchQuestionBody body) {
+    public ApiResponse<List<QuestionVO>> searchQuestionsMysql(SearchQuestionBody body) {
         String keyword = body.getKeyword();
 
         // TODO: 简单实现搜索问题功能，后续需要优化
+
         List<Question> questionList = questionMapper.findByKeyword(keyword);
 
         List<QuestionVO> questionVOList = questionList.stream().map(question -> {
@@ -214,5 +226,33 @@ public class QuestionServiceImpl implements QuestionService {
         }).toList();
 
         return ApiResponseUtil.success("搜索问题成功", questionVOList);
+    }
+
+    @Override
+    public ApiResponse<List<QuestionVO>> searchQuestionsES(SearchQuestionBody body) {
+        String keyword = body.getKeyword();
+
+        try {
+            List<QuestionDocument> questionDocs = questionEsRepository.findByTitleContaining(keyword);
+            System.out.println("拿到文档数量: " + questionDocs.size());
+
+            List<QuestionVO> questionVOList = questionDocs.stream().map(doc -> {
+                QuestionVO questionVO = new QuestionVO();
+                BeanUtils.copyProperties(doc, questionVO);
+                return questionVO;
+            }).toList();
+
+            return ApiResponseUtil.success("搜索问题成功", questionVOList);
+        } catch (Exception e) {
+            e.printStackTrace(); // 打印异常堆栈
+            return ApiResponseUtil.error("ES 查询失败：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<List<QuestionVO>> searchQuestions(SearchQuestionBody body){
+        if (provider.equals("es")) return searchQuestionsES(body);
+        else if (provider.equals("mysql")) return searchQuestionsMysql(body);
+        return ApiResponse.error("搜索引擎选择错误");
     }
 }

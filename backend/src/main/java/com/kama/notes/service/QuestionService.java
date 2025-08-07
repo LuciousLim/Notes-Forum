@@ -86,7 +86,23 @@ public interface QuestionService {
     ApiResponse<QuestionNoteVO> userGetQuestion(Integer questionId);
 
     /**
-     * 搜索问题
+     * 搜索问题, 通过Mysql
+     *
+     * @param body 包含搜索问题的请求体
+     * @return 返回一个携带搜索结果的 ApiResponse 对象
+     */
+    ApiResponse<List<QuestionVO>> searchQuestionsMysql(SearchQuestionBody body);
+
+    /**
+     * 搜索问题, 通过Elasticsearch
+     *
+     * @param body 包含搜索问题的请求体
+     * @return 返回一个携带搜索结果的 ApiResponse 对象
+     */
+    ApiResponse<List<QuestionVO>> searchQuestionsES(SearchQuestionBody body);
+
+    /**
+     * 搜索问题，根据search.provider选择搜索方式
      *
      * @param body 包含搜索问题的请求体
      * @return 返回一个携带搜索结果的 ApiResponse 对象

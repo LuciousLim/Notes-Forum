@@ -2,6 +2,7 @@ package com.kama.notes.mapper;
 
 import com.kama.notes.model.dto.question.QuestionQueryParam;
 import com.kama.notes.model.entity.Question;
+import com.kama.notes.model.entity.QuestionList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,6 +25,14 @@ public interface QuestionMapper {
      * @return 返回找到的问题对象，如果没有找到则返回null
      */
     Question findById(@Param("questionId") Integer questionId);
+
+    /**
+     * 获取所有题目
+     *
+     * @return 返回所有题目的列表
+     */
+    List<Question> findAll();
+
 
     /**
      * 批量通过问题  ID查找问题

@@ -1,7 +1,10 @@
 package com.kama.notes.model.base;
 
+import com.kama.notes.model.vo.question.QuestionVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * API响应类
@@ -90,6 +93,18 @@ public class ApiResponse<T> {
         response.setCode(code);
         response.setMessage(message);
         response.setData(data);
+        return response;
+    }
+
+    /**
+     * 创建自定义文本错误响应
+     *
+     * @param message 错误消息
+     * @return API响应
+     */
+    public static <T> ApiResponse<T> error(String message) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setMessage(message);
         return response;
     }
 }
