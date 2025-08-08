@@ -30,6 +30,13 @@ public interface NoteMapper {
     Note findById(@Param("noteId") Integer noteId);
 
     /**
+     * 查找所有笔记
+     *
+     * @return 返回所有的的笔记对象，如果找不到则返回 null
+     */
+    List<Note> findAll();
+
+    /**
      * 根据查询参数获取笔记列表
      *
      * @param params 查询参数，用于过滤笔记

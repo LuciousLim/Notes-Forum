@@ -4,7 +4,9 @@ import com.kama.notes.model.base.ApiResponse;
 import com.kama.notes.model.base.EmptyVO;
 import com.kama.notes.model.dto.note.CreateNoteRequest;
 import com.kama.notes.model.dto.note.NoteQueryParams;
+import com.kama.notes.model.dto.note.SearchNoteBody;
 import com.kama.notes.model.dto.note.UpdateNoteRequest;
+import com.kama.notes.model.entity.Note;
 import com.kama.notes.model.vo.note.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,4 +70,10 @@ public interface NoteService {
      * @return 用户提交top3Count
      */
     ApiResponse<Top3Count> submitNoteTop3Count();
+
+    /**
+     * 搜索用户笔记，ES
+     * @return 查询到的笔记
+     */
+//    ApiResponse<List<Note>> searchNotes(SearchNoteBody body);
 }

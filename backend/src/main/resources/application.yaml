@@ -64,7 +64,7 @@ kafka:
 search:
   provider: es
   sync:
-    enable: false
+    enable: true
 
 
 mybatis:

@@ -7,19 +7,25 @@ import com.kama.notes.model.base.EmptyVO;
 import com.kama.notes.model.base.Pagination;
 import com.kama.notes.model.dto.note.CreateNoteRequest;
 import com.kama.notes.model.dto.note.NoteQueryParams;
+import com.kama.notes.model.dto.note.SearchNoteBody;
 import com.kama.notes.model.dto.note.UpdateNoteRequest;
 import com.kama.notes.model.entity.Note;
 import com.kama.notes.mapper.NoteMapper;
 import com.kama.notes.model.entity.Question;
 import com.kama.notes.model.entity.User;
+import com.kama.notes.model.es.NoteDocument;
 import com.kama.notes.model.vo.category.CategoryVO;
 import com.kama.notes.model.vo.note.*;
+import com.kama.notes.model.vo.question.QuestionVO;
 import com.kama.notes.scope.RequestScopeData;
 import com.kama.notes.service.*;
+import com.kama.notes.service.es.NoteEsRepository;
+import com.kama.notes.service.es.QuestionEsRepository;
 import com.kama.notes.utils.ApiResponseUtil;
 import com.kama.notes.utils.MarkdownUtil;
 import com.kama.notes.utils.PaginationUtils;
 import lombok.extern.log4j.Log4j2;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +60,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private NoteEsRepository noteEsRepository;
 
     @Override
     public ApiResponse<List<NoteVO>> getNotes(NoteQueryParams params) {
@@ -330,4 +339,8 @@ public class NoteServiceImpl implements NoteService {
 
         return ApiResponseUtil.success("获取笔记top3成功", top3Count);
     }
+
+
+
+
 }

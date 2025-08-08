@@ -1,5 +1,6 @@
-package com.kama.notes.service;
+package com.kama.notes.service.es;
 
+import com.kama.notes.model.es.NoteDocument;
 import com.kama.notes.model.es.QuestionDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 

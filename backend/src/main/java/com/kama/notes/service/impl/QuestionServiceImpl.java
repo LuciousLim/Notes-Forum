@@ -19,7 +19,7 @@ import com.kama.notes.model.vo.question.QuestionNoteVO;
 import com.kama.notes.model.vo.question.QuestionUserVO;
 import com.kama.notes.model.vo.question.QuestionVO;
 import com.kama.notes.scope.RequestScopeData;
-import com.kama.notes.service.QuestionEsRepository;
+import com.kama.notes.service.es.QuestionEsRepository;
 import com.kama.notes.service.QuestionService;
 import com.kama.notes.utils.ApiResponseUtil;
 import com.kama.notes.utils.PaginationUtils;
@@ -27,7 +27,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;

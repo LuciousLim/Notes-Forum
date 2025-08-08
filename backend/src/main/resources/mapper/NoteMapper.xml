@@ -43,6 +43,10 @@
         LIMIT #{limit} OFFSET ${offset}
     </select>
 
+    <select id="findAll" resultType="com.kama.notes.model.entity.Note">
+        SELECT * FROM note
+    </select>
+
     <select id="filterFinishedQuestionIdsByUser" resultType="integer">
         <if test="questionIds != null and questionIds.size > 0">
             SELECT question_id

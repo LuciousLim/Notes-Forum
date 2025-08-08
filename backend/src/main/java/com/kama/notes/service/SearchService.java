@@ -1,6 +1,7 @@
 package com.kama.notes.service;
 
 import com.kama.notes.model.base.ApiResponse;
+import com.kama.notes.model.dto.note.SearchNoteBody;
 import com.kama.notes.model.entity.Note;
 import com.kama.notes.model.entity.User;
 
